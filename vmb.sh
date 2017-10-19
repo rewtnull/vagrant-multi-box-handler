@@ -14,7 +14,12 @@ provider="virtualbox"
 
 case ${provider} in
     virtualbox);;
-    your-provider-here);;
+    vmware);;
+    hyperv);;
+    libvirt);;
+    kvm);;
+    lxc);;
+    add-your-provider-here);;
     *)
 	error "Box type ${provider} not supported"
 esac
@@ -41,18 +46,18 @@ type -p "$(which vagrant)" 1>/dev/null || error "You need vagrant to run this sc
 
 ### script arguments. as this script only accepts one argument it doesn't need to be that complicated
 case ${1} in
-    list)
+    list|status)
 	vagrant global-status; exit 0;;
-    up)
+    up|start)
 	action="up";;
     suspend)
 	action="suspend";;
     resume)
 	action="resume";;
-    halt)
+    halt|down|stop)
 	action="halt";;
     *)
-	echo "Valid arguments are 'list', 'up', 'suspend', 'resume', or 'halt'"; exit 1;;
+	echo "Valid arguments are 'list', 'status', 'up', 'down', 'halt', 'stop', 'suspend', or 'resume'"; exit 1;;
 esac
 
 ### trying to keep external command calls to a minimum. my solution: fill them arrays with them datas
