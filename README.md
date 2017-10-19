@@ -19,6 +19,8 @@ DESCRIPTION
 	in way of suspending multiple boxes at once. Well, since I wanted to be
 	able to do so, I wrote this little script.
 
+	Currently only handling one provider type at a time.
+
 ARGUMENTS
 
 	OPTIONS
@@ -47,6 +49,16 @@ DEPENDENCIES
 	vmb.sh has built in sanity checks and will exit if any of these
 	conditions are not met.
 
+CONFIGURATION
+
+	In the normal use case, only one variable needs to be set:
+
+	    provider
+
+		Name of provider of virtual machine
+
+	    Default: "virtualbox"
+
 AUTHOR
 
 	Written by Marcus Hoffren
@@ -74,8 +86,8 @@ CHANGELOG
 				[*] Fixed super small shellcheck complaint
 				[+] Added support for providers with a new provider
 				    setting
-				[*] Minor code cleanup
 				[+] Added some aliases to arguments
+				[*] Minor code cleanup
 
 TODO
 

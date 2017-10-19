@@ -24,6 +24,8 @@ case ${provider} in
 	error "Box type ${provider} not supported";;
 esac
 
+### end settings
+
 ### minimal error handler
 error() {
     { echo -e "\n\e[91m*\e[0m ${@}\n" 1>&2; exit 1; }
