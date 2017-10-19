@@ -70,6 +70,11 @@ CHANGELOG
 	LEGEND: [+] Add, [-] Remove, [*] Change, [!] Bugfix
 
 	v0.1 (20171018)		[+] Initial release
+	v0.2 (20171019)		[*] Attached exception handler to vagrant calls
+				[*] Fixed super small shellcheck complaint
+				[+] Added support for providers with a new provider
+				    setting
+				[*] Minor code cleanup
 
 TODO
 

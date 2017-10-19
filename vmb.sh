@@ -8,6 +8,10 @@
 # There is NO WARRANTY, to the extent permitted by law.
 #
 
+### settings
+
+provider="virtualbox"
+
 ### minimal error handler
 error() {
     { echo -e "\n\e[91m*\e[0m ${@}\n" 1>&2; exit 1; }
@@ -27,6 +31,12 @@ type -p "$(which grep)" 1>/dev/null || error "You should probably reinstall your
 type -p "$(which awk)" 1>/dev/null || error "You need awk to run this script"
 type -p "$(which vagrant)" 1>/dev/null || error "You need vagrant to run this script"
 
+case ${provider} in
+    virtualbox);;
+    *)
+	error "Box type ${provider} not supported"
+esac
+
 ### script arguments. as this script only accepts one argument it doesn't need to be that complicated
 case ${1} in
     list)
@@ -44,7 +54,7 @@ case ${1} in
 esac
 
 ### trying to keep external command calls to a minimum. my solution: fill them arrays with them datas
-box_ids=( $( vagrant global-status | grep virtualbox | awk '{print $1}' | while read line; do echo ${line}; done; except "array box_ids failed" ) ); unset line  # save box id's to array
+box_ids=( $( vagrant global-status | grep virtualbox | awk '{ print $1 }'; except "array box_ids failed" ) ) # save box id's to array
 box_states=( $( vagrant global-status | grep virtualbox | awk '{ print $4 }'; except "array box_states failed" ) ) # save box states to array
 box_names=( $( vagrant global-status | grep virtualbox | grep -o '[^/]*$'; except "array box_names failed" ) ) # save box names to array
 
@@ -58,14 +68,14 @@ for (( i = 0; i < ${#box_states[@]}; i++ )); do
 		echo -e "${box_names[$i]} (${box_ids[$i]}) is in the state \033[1m${box_states[${i}]}\033[m and can not be resumed, skipping"
 	    else
 		echo -e "${box_names[$i]} (${box_ids[$i]}) - Changing state from \033[1m${box_states[${i}]}\033[m to \033[1m${action}\033[m"
-		vagrant "${action}" "${box_ids[$i]}"
+		{ vagrant "${action}" "${box_ids[$i]}"; except "vagrant ${action} ${box_ids[$i]} failed"; }
 	    fi;;
 	saved)
 	    if [[ ${action} == "suspend" ]]; then
 		echo -e "${box_names[$i]} (${box_ids[$i]}) is already in the state \033[1m${box_states[${i}]}\033[m, skipping"
 	    elif [[ ${action} == "resume" || ${action} == "halt" ]]; then
 		echo -e "${box_names[$i]} (${box_ids[$i]}) - Changing state from \033[1m${box_states[${i}]}\033[m to \033[1m${action}\033[m"
-		vagrant "${action}" "${box_ids[$i]}"
+		{ vagrant "${action}" "${box_ids[$i]}"; except "vagrant ${action} ${box_ids[$i]} failed"; }
 	    else
 		echo -e "${box_names[$i]} (${box_ids[$i]}) is in the state \033[1m${box_states[$i]}\033[m. Use \033[1m${0##*/} resume\033[m"
 	    fi;;
@@ -76,12 +86,12 @@ for (( i = 0; i < ${#box_states[@]}; i++ )); do
 		echo -e "${box_names[$i]} (${box_ids[$i]}) is in the state \033[1m${box_states[${i}]}\033[m and can not be suspended, skipping"
 	    else
 		echo -e "${box_names[$i]} (${box_ids[$i]}) - Changing state from \033[1m${box_states[${i}]}\033[m to \033[1m${action}\033[m"
-		vagrant "${action}" "${box_ids[$i]}"
+		{ vagrant "${action}" "${box_ids[$i]}"; except "vagrant ${action} ${box_ids[$i]} failed"; }
 	    fi;;
 	aborted)
 	    if [[ ${action} == "up" ]]; then
 		echo -e "${box_names[$i]} (${box_ids[$i]}) - Changing state from \033[1m${box_states[${i}]}\033[m to \033[1m${action}\033[m"
-		vagrant "${action}" "${box_ids[$i]}"
+		{ vagrant "${action}" "${box_ids[$i]}"; except "vagrant ${action} ${box_ids[$i]} failed"; }
 	    else
 		echo -e "${box_names[$i]} (${box_ids[$i]}) is in the state \033[1m${box_states[$i]}\033[m, skipping"
 	    fi;;
