@@ -8,7 +8,7 @@ VERSION
 
 SYNOPSIS:
 
-	vmb.sh [ list | up | suspend | resume | halt ]
+	vmb.sh [ list | status | up | down | stop | halt | suspend | resume ]
 
 DESCRIPTION
 
@@ -23,19 +23,19 @@ ARGUMENTS
 
 	OPTIONS
 
-	list				Same as 'vagrant global-status'
+	list, status			Same as 'vagrant global-status'
 
-	up				Bring all boxes that don't have the state
+	up, start			Bring all boxes that don't have the state
 					'running' up
+
+	halt, down, stop		Halt all boxes that are running or are
+					suspended
 
 	suspend				Suspend all boxes that are not already
 					suspended
 
 	resume				Resumes all boxes that are not already
 					running
-
-	halt				Halt all boxes that are running or are
-					suspended
 
 DEPENDENCIES
 
@@ -75,6 +75,7 @@ CHANGELOG
 				[+] Added support for providers with a new provider
 				    setting
 				[*] Minor code cleanup
+				[+] Added some aliases to arguments
 
 TODO
 
