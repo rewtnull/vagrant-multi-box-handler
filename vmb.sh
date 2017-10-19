@@ -12,20 +12,6 @@
 
 provider="virtualbox"
 
-case ${provider} in
-    virtualbox);;
-    vmware);;
-    hyperv);;
-    libvirt);;
-    kvm);;
-    lxc);;
-    add-your-provider-here);;
-    *)
-	error "Box type ${provider} not supported";;
-esac
-
-### end settings
-
 ### minimal error handler
 error() {
     { echo -e "\n\e[91m*\e[0m ${@}\n" 1>&2; exit 1; }
@@ -38,6 +24,18 @@ except() {
 	[[ ${pstatus[${i}]} -gt 0 ]] && { echo -e "\n\e[91m*\e[0m ${1} - Return Code: ${pstatus[${i}]}\n"; exit; }
     done
 }
+
+case ${provider} in
+    virtualbox);;
+    vmware);;
+    hyperv);;
+    libvirt);;
+    kvm);;
+    lxc);;
+    add-your-provider-here);;
+    *)
+	error "Box type ${provider} not supported";;
+esac
 
 ### sanity check
 type -p "which"  1>/dev/null || error "You need which to run this script"
