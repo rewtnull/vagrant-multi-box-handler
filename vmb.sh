@@ -21,7 +21,7 @@ case ${provider} in
     lxc);;
     add-your-provider-here);;
     *)
-	error "Box type ${provider} not supported"
+	error "Box type ${provider} not supported";;
 esac
 
 ### minimal error handler
@@ -42,7 +42,6 @@ type -p "which"  1>/dev/null || error "You need which to run this script"
 type -p "$(which grep)" 1>/dev/null || error "You should probably reinstall your Linux"
 type -p "$(which awk)" 1>/dev/null || error "You need awk to run this script"
 type -p "$(which vagrant)" 1>/dev/null || error "You need vagrant to run this script"
-
 
 ### script arguments. as this script only accepts one argument it doesn't need to be that complicated
 case ${1} in
