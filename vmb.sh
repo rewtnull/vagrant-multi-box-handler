@@ -12,6 +12,13 @@
 
 provider="virtualbox"
 
+case ${provider} in
+    virtualbox);;
+    your-provider-here);;
+    *)
+	error "Box type ${provider} not supported"
+esac
+
 ### minimal error handler
 error() {
     { echo -e "\n\e[91m*\e[0m ${@}\n" 1>&2; exit 1; }
@@ -31,11 +38,6 @@ type -p "$(which grep)" 1>/dev/null || error "You should probably reinstall your
 type -p "$(which awk)" 1>/dev/null || error "You need awk to run this script"
 type -p "$(which vagrant)" 1>/dev/null || error "You need vagrant to run this script"
 
-case ${provider} in
-    virtualbox);;
-    *)
-	error "Box type ${provider} not supported"
-esac
 
 ### script arguments. as this script only accepts one argument it doesn't need to be that complicated
 case ${1} in
@@ -54,9 +56,9 @@ case ${1} in
 esac
 
 ### trying to keep external command calls to a minimum. my solution: fill them arrays with them datas
-box_ids=( $( vagrant global-status | grep virtualbox | awk '{ print $1 }'; except "array box_ids failed" ) ) # save box id's to array
-box_states=( $( vagrant global-status | grep virtualbox | awk '{ print $4 }'; except "array box_states failed" ) ) # save box states to array
-box_names=( $( vagrant global-status | grep virtualbox | grep -o '[^/]*$'; except "array box_names failed" ) ) # save box names to array
+box_ids=( $( vagrant global-status | grep "${provider}" | awk '{ print $1 }'; except "array box_ids failed" ) ) # save box id's to array
+box_states=( $( vagrant global-status | grep "${provider}" | awk '{ print $4 }'; except "array box_states failed" ) ) # save box states to array
+box_names=( $( vagrant global-status | grep "${provider}" | grep -o '[^/]*$'; except "array box_names failed" ) ) # save box names to array
 
 ### since all arrays are (and should be!) equally large, arbitrarily loop through box_states array and take appropriate action
 for (( i = 0; i < ${#box_states[@]}; i++ )); do
